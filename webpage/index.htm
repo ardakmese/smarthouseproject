@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+        <title>ÖHÜ - SMART PROJECT BETA!</title>
+        <script>
+		strgarj = "";
+        strLED = "";
+		strHour = "";
+		strHour2 = "";
+		strHour0 = "";
+		strdn1 = "";
+		strdn2 = "";
+		strdn3 = "";
+		var data_val = 0;
+	
+        function GetArduinoIO()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function()
+            {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        if (this.responseXML != null) {
+                            // XML file received - contains LED states
+                            var re;
+                            var num_LEDs;
+                            var i;
+                            var ledstr = "";
+                            
+                            re = this.responseXML.getElementsByTagName('LED');
+							if (this.responseXML.getElementsByTagName('garaj')[0].childNodes[0].nodeValue === "checked") {
+                                document.garj_form.garj.checked = true;
+                            }
+                            else {
+                                document.garj_form.garj.checked = false;
+                            }
+                            num_LEDs = re.length;
+                            	document.getElementById("input3").innerHTML =
+								this.responseXML.getElementsByTagName('analog')[0].childNodes[0].nodeValue;
+								data_val = this.responseXML.getElementsByTagName('analog')[0].childNodes[0].nodeValue;
+                            for (i = 0; i < num_LEDs; i++) {
+                                ledstr = "LED" + (i + 1);
+                                if (re[i].childNodes[0].nodeValue === "checked") {
+                                    document.getElementsByName(ledstr)[0].checked = true;
+                                }
+                                else {
+                                    document.getElementsByName(ledstr)[0].checked = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strLED + strgarj + strdn1 + strdn2 + strdn3 + nocache, true);
+            request.send(null);
+            setTimeout('GetArduinoIO()', 1000);
+            strLED = "";
+        }
+        // service LEDs when checkbox checked/unchecked
+		function garjcheck()
+        {
+            if (garj_form.garj.checked) {
+                strgarj = "&garj=1";
+            }
+            else{
+                strgarj = "&garj=0";
+            }
+        }
+		function dn1check()
+        {
+            if (dn1_form.dn1.checked) {
+                strdn1 = "&dn1=1";
+            }
+            else {
+                strdn1 = "&dn1=0";
+            }
+        }
+		function dn2check()
+        {
+            if (dn2_form.dn2.checked) {
+                strdn2 = "&dn2=1";
+            }
+            else {
+                strdn2 = "&dn2=0";
+            }
+        }
+		function dn3check()
+        {
+            if (dn3_form.dn3.checked) {
+                strdn3 = "&dn3=1";
+            }
+            else {
+                strdn3 = "&dn3=0";
+            }
+        }
+        function GetCheck(led_num_str, cb)
+        {
+            if (cb.checked) {
+                strLED += ("&" + led_num_str + "=1");
+            }
+            else {
+                strLED += ("&" + led_num_str + "=0");
+            }
+        }
+		function gecikme1() {
+		document.dn1_form.dn1.disabled = true;
+		}
+		function gecikme2() {
+		document.dn2_form.dn2.disabled = true;
+		}
+		function gecikme3() {
+		document.dn3_form.dn3.disabled = true;
+		}
+		function ledac()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+      
+            var sel_hour = document.getElementById("selHour");
+           
+             if (sel_hour.selectedIndex > 0 && sel_hour.selectedIndex == 01) {
+			strHour = "&5saniye"; 
+				setTimeout(gecikme1, 10000);
+			document.dn1_form.dn1.disabled= false;
+			setTimeout(ledkapat, 10000);
+			 }
+			   if (sel_hour.selectedIndex > 0 && sel_hour.selectedIndex == 02) {
+			strHour = "&10saniye"; 
+			setTimeout(gecikme1, 30000);
+			document.dn1_form.dn1.disabled= false;
+			setTimeout(ledkapat, 30000);
+			 }
+			   if (sel_hour.selectedIndex > 0 && sel_hour.selectedIndex == 03) {
+			strHour = "&30saniye"; 
+			setTimeout(gecikme1, 60000);
+			document.dn1_form.dn1.disabled= false;
+			setTimeout(ledkapat, 60000);
+			}
+			 
+			
+
+            // send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strHour + nocache, true);
+            request.send(null);
+        }
+		function ledac2()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+      
+            var sel_hour2 = document.getElementById("selHour2");
+           
+             if (sel_hour2.selectedIndex > 0 && sel_hour2.selectedIndex == 01) {
+			strHour2 = "&cam"; 
+			setTimeout(gecikme2, 10000);
+			document.dn2_form.dn2.disabled= false;
+			setTimeout(ledkapat2, 10000);
+			 }
+			   if (sel_hour2.selectedIndex > 0 && sel_hour2.selectedIndex == 02) {
+			strHour2 = "&cam2"; 
+			setTimeout(gecikme2, 30000);
+			document.dn2_form.dn2.disabled= false;
+			setTimeout(ledkapat2, 30000);
+			 }
+			   if (sel_hour2.selectedIndex > 0 && sel_hour2.selectedIndex == 03) {
+			strHour2 = "&cam3"; 
+			setTimeout(gecikme2, 60000);
+			document.dn2_form.dn2.disabled= false;
+			setTimeout(ledkapat2, 60000);
+			 }
+			  
+			 
+			
+
+            // send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strHour2 + nocache, true);
+            request.send(null);
+        }
+				
+				function ledac0()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+      
+            var sel_hour0 = document.getElementById("selHour0");
+           
+             if (sel_hour0.selectedIndex > 0 && sel_hour0.selectedIndex == 01) {
+			strHour0 = "&kli"; 
+			setTimeout(gecikme3, 10000);
+			document.dn3_form.dn3.disabled= false;
+			setTimeout(ledkapat0, 10000);
+			 }
+			   if (sel_hour0.selectedIndex > 0 && sel_hour0.selectedIndex == 02) {
+			strHour0 = "&kli2"; 
+			setTimeout(gecikme3, 30000);
+			document.dn3_form.dn3.disabled= false;
+			setTimeout(ledkapat0, 30000);
+			 }
+			   if (sel_hour0.selectedIndex > 0 && sel_hour0.selectedIndex == 03) {
+			strHour0 = "&kli3"; 
+			setTimeout(gecikme3, 60000);
+			document.dn3_form.dn3.disabled= false;
+			setTimeout(ledkapat0, 60000);
+			 }
+			 
+			
+
+            // send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strHour0 + nocache, true);
+            request.send(null);
+        }
+
+           
+		function ledkapat()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+      
+            var sel_hour = document.getElementById("selHour");
+			strHour = "&ledikapat"; 
+			strdn1 = "&dn1=0";
+			document.dn1_form.dn1.checked = false;
+			document.dn1_form.dn1.disabled= true;
+			// send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strHour + strdn1 + nocache, true);
+            request.send(null);
+        }
+		function ledkapat2()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+      
+            var sel_hour2 = document.getElementById("selHour2");
+
+			strdn2 = "&dn2=0";
+			strHour2 = "&cam7"; 
+			
+			document.dn2_form.dn2.checked = false;
+			document.dn2_form.dn2.disabled= true;
+            
+			
+			
+
+            // send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strHour2 + strdn2 + nocache, true);
+            request.send(null);
+        }
+				function ledkapat0()
+        {
+            nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+      
+            var sel_hour0 = document.getElementById("selHour0");
+           
+             
+			
+			document.dn3_form.dn3.checked = false;
+			document.dn3_form.dn3.disabled= true;
+			 strHour0 = "&kli7"; 
+			 strdn3 = "&dn3=0";
+            
+			
+			
+
+            // send HTTP GET request with LEDs to switch on/off if any
+            request.open("GET", "ajax_inputs" + strHour0 + strdn3 + nocache, true);
+            request.send(null);
+        }
+		
+    </script>
+    <style>
+        .sagdakicekler {
+              float: left;
+            margin: 0 20px 20px 0;
+			position: relative;
+			bottom: 505px;
+			left: 610px;
+            padding: 0 1px 0 80px;
+            min-width: 180px;
+        }
+		 .garaj {
+            float: left;
+            margin: 0 2px 2px 0;
+			position: relative;
+			bottom:158px;
+			right:130px;
+			
+            padding: 0 1px 0 1px;
+            min-width: 180px;
+        }
+		.temp {
+            float: left;
+            margin: 0 2px 2px 0;
+			position: relative;
+			bottom:220px;
+			right:890px;
+			
+            padding: 0 1px 0 1px;
+            min-width: 180px;
+        }
+		 .foto {
+            float: left;
+            margin: 0 2px 2px 0;
+			position: relative;
+			top: 390px;
+			
+			right: 190px;
+            padding: 0 1px 0 1px;
+            min-width: 180px;
+        }
+		.soldakicekler {
+            float: left;
+            margin: 0 20px 20px 0;
+			position: relative;
+			bottom: 500px;
+			left:80px;
+            padding: 0 1px 0 80px;
+            min-width: 180px;
+			text-align: right;
+        }
+		input {
+            margin: 10px;
+        }
+		  p, form, button {
+            font-size: 100%;
+            color: black;
+			 font-family: "Times New Roman", Times, serif;
+			 
+        }
+		.out_box_2 {
+            float: top;
+			position: relative;
+        }
+		.makineler {
+		text-align: center;
+            float: left;
+			position: relative;
+            margin: 0 20px 20px 0;
+            left:30px;
+            padding: 10px 10px 10px 10px;
+            min-width: 100px;
+        }
+		.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 3px 3px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12	px;
+    margin: 4px 2px;
+	padding: 2px 10px 2px 2px;
+    cursor: pointer;
+}
+
+.button2 {background-color: #008CBA;} /* Blue */
+.button3 {background-color: #f44336;} /* Red */ 
+.button4 {background-color: #e7e7e7; color: black;} /* Gray */ 
+.button5 {background-color: #555555;} /* Black */
+		.hepsi {
+            float: left;
+            bottom: 180px;
+			right: 185px;
+      
+			position: relative;
+           
+            min-width: 180px;
+			
+        }
+	
+    </style>
+    </head>
+    <body onload="GetArduinoIO()">
+               <img src="arkaplan.png" />
+		<div class="soldakicekler">
+            <form class="check_LEDs" name="LED_form1">
+				Lavabo - Lamba      <input type="checkbox" name="LED1" value="0" onclick="GetCheck('LED1', this)" /><br />
+                Yatak Odası - Lamba <input type="checkbox" name="LED2" value="0" onclick="GetCheck('LED2', this)" /><br />
+                Dış Aydınlatma    <input type="checkbox" name="LED3" value="0" onclick="GetCheck('LED3', this)" /><br />
+                Çocuk Odası - Lamba <input type="checkbox" name="LED4" value="0" onclick="GetCheck('LED4', this)" />
+            </form>
+        </div>
+		<div class="sagdakicekler">
+            <form class="check_LEDs" name="LED_form2">
+                <input type="checkbox" name="LED5" value="0" onclick="GetCheck('LED5', this)" />Mutfak - Lamba<br />
+                <input type="checkbox" name="LED6" value="0" onclick="GetCheck('LED6', this)" />Antre - Lamba <br />
+                <input type="checkbox" name="LED7" value="0" onclick="GetCheck('LED7', this)" />Salon - Lamba <br />
+                <input type="checkbox" name="LED8" value="0" onclick="GetCheck('LED8', this)" />Salon - TV 
+            </form>
+        </div>
+		<div class="hepsi">
+           <div class="makineler">
+		   <form id="check_LEDs" name="dn1_form">
+		   Çamaşır Makinesi:<br />
+                <input  type="checkbox" disabled=true name="dn1" value="0" onclick="dn1check()" />
+            </form>
+       
+		
+            
+		<select id="selHour">
+            <option selected="selected" value="">Zaman Seçin</option>
+            <option value="00">10:00-12:00(10 Sn)</option>
+            <option value="01">12:00-14:00(30 Sn)</option>
+            <option value="02">14:00-16:00(1 Dak)</option>
+        </select><br />
+		
+		<input class="button" type="submit"  value="   Aç  " onclick="ledac()"  />
+		<input class="button button3"type="submit"  value="  Kapat" onclick="ledkapat()" />
+        </div>
+		<div class="makineler">
+		 
+   <form id="check_LEDs" name="dn2_form">
+   Bulaşık Makinesi:<br />
+                <input type="checkbox" disabled=true name="dn2" value="0" onclick="dn2check()" />
+            </form>
+      
+       
+		
+        <select id="selHour2">
+            <option selected="selected" value="">Zaman Seçin</option>
+            <option value="00">10:00-12:00(10 Sn)</option>
+            <option value="01">12:00-14:00(30 Sn)</option>
+            <option value="02">14:00-16:00(1 Dak)</option>
+        </select>
+    <br />
+		<input type="submit" class="button"  value="   Aç  " onclick="ledac2()"  />
+		<input type="submit" class="button button3" value="  Kapat" onclick="ledkapat2()" />
+		 </div>
+		 
+		<div class="makineler">
+	 <form id="check_LEDs" name="dn3_form">
+	 Fırın:<br />
+                <input type="checkbox" disabled=true name="dn3" value="0" onclick="dn3check()" />
+            </form>
+      
+		<select id="selHour0">
+            <option selected="selected" value="">Zaman Seçin</option>
+            <option value="00">10:00-12:00(10 Sn)</option>
+            <option value="01">12:00-14:00(30 Sn)</option>
+            <option value="02">14:00-16:00(1 Dak)</option>
+        </select>
+    <br />
+		<input type="submit"  class="button" value="   Aç  " onclick="ledac0()"  />
+		<input type="submit" class="button button3"  value="  Kapat" onclick="ledkapat0()" />
+		
+		 </div>
+		 </div>
+
+ <div class="garaj">
+   <form id="check_LEDs" name="garj_form">
+                <input type="checkbox" name="garj" value="0" onclick="garjcheck()" />Garaj Kapısı<br /><br />
+            </form>
+      
+        </div>
+		
+		<div class="temp">
+		<p>Sıcaklık(°C): <span id="input3">0°</span></p>
+		 </div>
+		 
+    </body>
+</html>
